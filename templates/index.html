@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <!-- Webpage Title -->
+        <title>WIP project plant</title>
+
+        <!-- Required meta tags -->
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta property="og:title" content="test"/>
+        <meta property="og:title" content="plant test"/>
+
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+              integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+              crossorigin="anonymous">
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css"/>
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css"/>
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+
+
+        <!-- 폰트-->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
+
+        <style>
+            body {
+                padding-top: 5rem;
+            }
+
+            .wrap {
+                max-width: 414px;
+                min-width: 414px;
+                height: 100vh;
+            }
+
+            a:link, a:visited {
+                color: inherit;
+            }
+
+            .card {
+                cursor: pointer;
+            }
+
+            .btn-circle {
+                width: 45px;
+                height: 45px;
+                line-height: 45px;
+                text-align: center;
+                padding: 0;
+                border-radius: 50%;
+            }
+
+            .btn-circle-xl {
+                width: 70px;
+                height: 70px;
+                line-height: 70px;
+                font-size: 1.3rem;
+            }
+
+            .starter-template {
+                padding: 3rem 1.5rem;
+                text-align: center;
+            }
+        </style>
+
+
+        <script>
+            $(document).ready(function () {
+                // $("#cards-box").html("");
+                showList();
+            });
+
+
+            // db에 저장하는 create api
+            function postList() {
+                // 1. 유저가 입력한 데이터를 #post-url에 가져오기
+                let url = $("#post-url").val();
+
+                // 2. memo에 POST 방식으로 메모 생성 요청하기
+                $.ajax({
+                    type: "POST", // POST 방식으로 요청하겠다.
+                    url: "/data", // /data라는 url에 요청하겠다.
+                    data: {url_give: url}, // 데이터를 주는 방법
+                    success: function (response) { // 성공하면
+                        if (response["result"] == "success") {
+                            alert(response["msg"]);
+                            // 3. 성공 시 페이지 새로고침하기
+                            window.location.reload();
+                        } else {
+                            alert("서버 오류!")
+                        }
+                    }
+                })
+            }
+
+            // db에서 데이터 갖고와서 카드 만들 기(read api)
+            function showList() {
+                // $('#cards-box').empty()
+                $.ajax({
+                    type: "GET",
+                    url: "/list",  // /list라는 url에 요청하겠다.
+                    data: {},
+                    success: function (response) {
+                        if (response["result"] == "empty") {
+                            $(".collapse").show();
+                            $("#collapse-icon").attr("class", "bi bi-dash");
+                            $("#icon-path").attr("d", "M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z");
+                            $(".navbar-toggler").prop('disabled', true);
+
+                            $("#post-url").focus();
+
+                        } else if (response["result"] == "success") {
+                            let lists = response['lists'];
+                            for (let i = 0; i < lists.length; i++) {
+                                let img = lists[i]["image"];
+                                let url = lists[i]["url"];
+                                let title = lists[i]["title"];
+                                let category = lists[i]["category"];
+                                let direction = lists[i]["direction"];
+                                let id = lists[i]["_id"];
+                                let checked = lists[i]["checked"];
+
+                                let button_html = `
+                                    <div>
+                                        <button type="button" class="btn btn-secondary" onclick="update('${id}', 1)">&#x2715 아직</button>
+                                    </div>`
+
+                                if (checked == 1) {
+                                    button_html = `
+                                        <div>
+                                            <button type="button" class="btn checking" onclick="update('${id}', 0)">&#x2713 먹음</button>
+                                        </div>`;
+                                }
+
+                                let temp_html = `
+                                    <div class="card mb-2" id="${id}">
+                                        <div class="card-header row form-inline no-gutters">
+                                            <div class="col-1" id="deleteButton">
+                                                <a class="forTooltip" data-toggle="tooltip" data-placement="bottom" title="이 영양제 지우기">
+                                                    <svg onclick="deleteCard('${id}')" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" id="del_${id}" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                        <path id="path" fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                            <div class="col-8 pl-2">
+                                                <span class="align-middle">${category}</span>
+                                            </div>
+                                            ` + button_html + `
+                                        </div>
+                                        <div class="row form-inline no-gutters">
+                                            <div class="col-3">
+                                                <img src="${img}" class="card-img" alt="${title}">
+                                            </div>
+                                            <div class="col-9">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">
+                                                        <a href="${url}" target="_blank">${title}</a>
+                                                    </h6>
+                                                    <p class="card-text">${direction}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+
+                                $("#cards-box").append(temp_html);
+                                $(".forTooltip").tooltip({
+                                    delay: {"show": 500, "hide": 0}
+                                });
+                            }
+                        }
+                    }
+                })
+            }
+
+            // 버튼 누르면 먹었는지 안먹었는지 정보 업데이트하기 (update api)
+            function update(id, checked) {
+                // 1. 서버에 1) POST 방식으로, 2) /update 라는 url에, 3) id_give 라는 이름으로 id를, check_give 라는 이름으로 checked 를 전달합니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/update",
+                    data: {'id_give': id, 'check_give': checked},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
+                            window.location.reload();
+                        }
+                        // let cardId = response['card_id'];
+                        // console.log(`reloaded: ${cardId}`);
+                        // $('#'+cardId).load(location.href + ' #'+cardId);
+                    }
+                })
+                ;
+            }
+
+            // x 누르면 카드 삭제하기 (delete api)
+            function deleteCard(id) {
+                // 1. 서버에 1) POST 방식으로, 2) /delete 라는 url에, 3) id_give 라는 이름으로 id를 전달합니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/delete",
+                    data: {'id_give': id,},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
+                            console.log("deleting " + id);
+                            alert('삭제했습니다.');
+                            window.location.reload();
+                        } else {
+                            alert('서버 오류')
+                        }
+                    }
+                });
+            }
+
+
+            $(function () {
+                $('#datetimepicker1').datetimepicker({format: 'L'});
+                $('#datetimepicker2').datetimepicker({format: 'L', useCurrent: false});
+                $("#datetimepicker1").on("change.datetimepicker", function (e) {
+                    $('#datetimepicker2').datetimepicker('minDate', e.date);
+                });
+                $("#datetimepicker2").on("change.datetimepicker", function (e) {
+                    $('#datetimepicker1').datetimepicker('maxDate', e.date);
+                });
+            });
+
+
+        </script>
+    </head>
+
+    <body>
+        <div class="wrap">
+
+            <!--상단바-->
+            <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
+                <a class="navbar-brand" href="#">WIP Project Plant</a>
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+                        data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse show" id="navbarsExampleDefault" style="">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">test<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">test</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">찾기</button>
+                    </form>
+                </div>
+            </nav>
+
+
+            <!--텍스트 영역-->
+            <div class="starter-template">
+                <h1>WIP Project Plant</h1>
+                <p class="lead">테스트 테스트 테스트 테스트<br> 일단 복붙</p>
+            </div>
+
+
+            <!--카드 영역-->
+            <div class="main container-fluid">
+                <!--카드 덱-->
+                <div class="card-deck">
+                    <div class="card">
+                        <img src="areca_palm.JPG" class="card-img-top">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div>
+                                        <h5 class="card-title">아레카 야자</h5>
+                                        <p class="card-text">
+                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-droplet-fill"
+                                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                      d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                            </svg>
+                                            3일 전 물 줌
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-light btn-circle btn-circle-xl">
+                                        <img src="watering.svg" width="50px">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <img src="areca_palm.JPG" class="card-img-top">
+                        <div class="row card-body">
+                            <div class="col-8">
+                                <div>
+                                    <h5 class="card-title">아레카 야자</h5>
+                                    <p class="card-text">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-droplet-fill"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                        </svg>
+                                        3일 전 물 줌
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-light btn-circle btn-circle-xl">
+                                    <img src="watering.svg" width="50px">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card text-center">
+                        <div class="card-body addCard" data-toggle="modal" data-target="#staticBackdrop">
+                            <h1 class="card-title">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus"
+                                     fill="currentColor"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                            </h1>
+                        </div>
+                    </div>
+
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false"
+                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">식물을 추가하세요.</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="plantSelect">식물을 선택하세요</label>
+                                        <select class="form-control" id="plantSelect">
+                                            <option selected>Choose your plant.</option>
+                                            <option>식물 1</option>
+                                            <option>식물 2</option>
+                                            <option>식물 3</option>
+                                            <option>식물 4</option>
+                                            <option>식물 5</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="plantName">식물 이름</label>
+                                        <input type="text" class="form-control" id="plantName"
+                                               placeholder="식물 이름을 입력하세요">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="input-group date" id="datetimepicker1"
+                                             data-target-input="nearest">
+                                            <input type="text" class="form-control datetimepicker-input"
+                                                   data-target="#datetimepicker1" value="01/11/2020">
+                                            <div class="input-group-append" data-target="#datetimepicker1"
+                                                 data-toggle="datetimepicker">
+                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                    <button type="button" class="btn btn-success">등록</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
