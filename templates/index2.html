@@ -29,7 +29,6 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
                 integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
                 crossorigin="anonymous"></script>
-        <script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
         <script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
         <script type="text/javascript"
@@ -75,11 +74,15 @@
             /* On mouse-over, add a deeper shadow */
             .card:hover {
                 box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-                cursor: pointer;
+                /*cursor: pointer;*/
             }
 
             .addCard {
                 height: 350px;
+            }
+
+            .addCard:hover {
+                cursor: pointer;
             }
 
             .card-header {
@@ -209,40 +212,74 @@
                                 let temp_html = `
                                     <div class="card">
                                         <img src="static/img/${plant}.JPG" class="card-img-top">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-9">
-                                                     <div>
-                                                        <h5 class="card-title">${name}</h5>
-                                                        <p class="card-text">
-                                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-droplet-fill"
-                                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                            <path fill-rule="evenodd"
-                                                                d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
-                                                        </svg>
-                                                            ${watering}
-                                                        </p>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div>
+                                                            <h5 class="card-title">${name}</h5>
+                                                            <p class="card-text">
+                                                                <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                                     class="bi bi-droplet-fill"
+                                                                     fill="currentColor"
+                                                                     xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd"
+                                                                          d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                                                </svg>
+                                                                ${watering}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <button type="button" class="btn btn-light btn-circle"
+                                                                data-toggle="modal" data-target="#proceed">
+                                                            <svg width="2.5em" height="2.5em" viewBox="0 0 16 16"
+                                                                 class="bi bi-droplet-fill"
+                                                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd"
+                                                                      d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                                            </svg>
+                                                        </button>
+                                                        <!-- Modal: proceed -->
+                                                        <div class="modal fade" id="proceed" data-backdrop="false" tabindex="-1" aria-labelledby="proceedLabel"
+                                                                    aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="proceedLabel">화분 속 흙을 확인하세요</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                                        aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        흙이 마르지 않았다면 나중에 물을 주세요.
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                                            미루기
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-success" onclick="update('${id}', '${today2}')">물주기</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-3">
-                                                    <button type="button" class="btn btn-light btn-circle" onclick="update('${id}', '${today2}')">
-                                                        <svg width="2.5em" height="2.5em" viewBox="0 0 16 16"
-                                                            class="bi bi-droplet-fill"
-                                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                            <path fill-rule="evenodd"
-                                                                d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
-                                                        </svg>
-                                                    </button>
-                                                </div>
                                             </div>
-                                        </div>
                                     </div>
-                                    `;
+                            `;
+
 
                                 $("#cards-box").append(temp_html);
-                                $(".forTooltip").tooltip({
-                                    delay: {"show": 500, "hide": 0}
-                                });
+                                $(".forTooltip").tooltip(
+                                    {
+                                        delay: {
+                                            "show":
+                                                500, "hide":
+                                                0
+                                        }
+                                    }
+                                );
                             }
                         }
                     }
@@ -306,10 +343,11 @@
                 <!--전체 카드 리스트-->
                 <div class="col-12 column">
                     <div id="cards-box">
+
                     </div>
                     <div class="card text-center addCard">
                         <div class="card-body align-items-center d-flex justify-content-center" data-toggle="modal"
-                             data-target="#staticBackdrop">
+                             data-target="#plantAdd">
                             <h1 class="card-title">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus"
                                      fill="currentColor"
@@ -322,13 +360,13 @@
                     </div>
 
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false"
-                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <!-- Modal: plantAdd -->
+                    <div class="modal fade" id="plantAdd" data-backdrop="static" data-keyboard="false"
+                         tabindex="-1" aria-labelledby="plantAddLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">식물을 추가하세요.</h5>
+                                    <h5 class="modal-title" id="plantAddLabel">식물을 추가하세요.</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -375,6 +413,10 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
                 </div>
             </div>
         </div>
