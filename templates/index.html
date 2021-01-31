@@ -2,13 +2,13 @@
 <html lang="ko">
     <head>
         <!-- Webpage Title -->
-        <title>WIP project plant</title>
+        <title>WIP Project Plant</title>
 
         <!-- Required meta tags -->
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <meta property="og:title" content="test"/>
-        <meta property="og:title" content="plant test"/>
+        <meta property="og:title" content="m:iherb"/>
+        <meta property="og:title" content="WIP Project Plant"/>
 
 
         <!-- CSS -->
@@ -18,6 +18,7 @@
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css"/>
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css"/>
+
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -32,71 +33,274 @@
                 src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
         <script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
 
         <!-- 폰트-->
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
-
         <style>
-            body {
-                padding-top: 5rem;
+            /*인풋 포커스시 테두리 초록색으로*/
+            textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
+                border-color: rgba(83, 186, 43, 1);
+                box-shadow: 0 0.5px 0.5px rgba(83, 186, 43, 0.075) inset, 0 0 8px rgba(83, 186, 43, 0.6);
+                outline: 0 none;
             }
 
-            .wrap {
+            .container-fluid {
                 max-width: 414px;
-                min-width: 414px;
+                padding-left: 0;
+                padding-right: 0;
+                /*background-color: #2E8B57;*/
                 height: 100vh;
             }
 
-            a:link, a:visited {
-                color: inherit;
+            .title {
+                text-align: center;
+                font-size: 40px;
+                font-weight: 500;
             }
 
-            .card {
+            /*a:link, a:visited {*/
+            /*    color: inherit;*/
+            /*}*/
+
+            .card-img-top {
                 cursor: pointer;
             }
 
-            .btn-circle {
-                width: 45px;
-                height: 45px;
-                line-height: 45px;
-                text-align: center;
-                padding: 0;
-                border-radius: 50%;
+            .infoimg {
+                width: 100%;
             }
 
-            .btn-circle-xl {
+            .infoicon {
+                width: 1.3em;
+                vertical-align: text-bottom;
+            }
+
+            .cardicon {
+                vertical-align: baseline;
+            }
+
+            .card {
+                margin-bottom: 15px;
+                /* Add shadows to create the "card" effect */
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+                transition: 0.3s;
+            }
+
+            /* On mouse-over, add a deeper shadow */
+            .card:hover {
+                box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+                /*cursor: pointer;*/
+            }
+
+            .addCard {
+                height: 350px;
+            }
+
+            .addCard:hover {
+                cursor: pointer;
+            }
+
+            .addCard svg:hover {
+                transform: scale(1.2, 1.2) translate3d(0, 0, 0);
+            }
+
+
+            .column {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                padding-right: 10px;
+                padding-left: 10px;
+            }
+
+            .btn-circle {
                 width: 70px;
                 height: 70px;
-                line-height: 70px;
-                font-size: 1.3rem;
-            }
-
-            .starter-template {
-                padding: 3rem 1.5rem;
+                padding: 10px 16px;
+                border-radius: 35px;
+                font-size: 12px;
                 text-align: center;
             }
+
+            .btn-light {
+                color: #48d1cc;
+            }
+
+            .btn-light:hover {
+                color: #ffffff;
+                background-color: #48d1cc;
+                border-color: #f8f9fa;
+            }
+
+            .checking {
+                background-color: #458000;
+                color: white;
+            }
+
+            .checking:hover {
+                background-color: #376700;
+                color: white;
+            }
+
+            .bi-x {
+                font-size: 1.7rem;
+                cursor: pointer;
+            }
+
+            .bi-x:hover {
+                color: firebrick;
+                transition: color .3s;
+            }
+
+            #deleteButton {
+                padding-left: 10px;
+            }
+
+            .menu {
+                position: relative;
+                height: 65px;
+                box-sizing: border-box;
+                font-size: 20px;
+                text-align: left;
+            }
+
+            .menu-item, .menu-open-button {
+                background: #00bcd4;
+                border-radius: 100%;
+                width: 60px;
+                height: 60px;
+                position: absolute;
+                color: white;
+                text-align: center;
+                line-height: 60px;
+                transform: translate3d(0, 0, 0);
+                transition: transform ease-out 200ms;
+            }
+
+            .menu-open {
+                display: none;
+            }
+
+            .hamburger {
+                width: 25px;
+                height: 3px;
+                background: white;
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-left: -12.5px;
+                margin-top: -1.5px;
+                transition: transform 200ms;
+            }
+
+            .hamburger-1 {
+                transform: translate3d(0, 0, 0);
+            }
+
+            .hamburger-2 {
+                transform: translate3d(0, 0, 0) rotate(-90deg);
+            }
+
+            .menu-open:checked + .menu-open-button .hamburger-1 {
+                transform: translate3d(0, 0, 0) rotate(45deg);
+            }
+
+            .menu-open:checked + .menu-open-button .hamburger-2 {
+                transform: translate3d(0, 0, 0) rotate(-45deg);
+            }
+
+            .menu-item:hover {
+                background: white;
+                color: #00bcd4;
+            }
+
+            .menu-item:nth-child(3) {
+                transition-duration: 180ms;
+            }
+
+            .menu-item:nth-child(4) {
+                transition-duration: 180ms;
+            }
+
+            .menu-item:nth-child(5) {
+                transition-duration: 180ms;
+            }
+
+            .menu-item:nth-child(6) {
+                transition-duration: 180ms;
+            }
+
+            .menu-open-button {
+                z-index: 2;
+                transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                transition-duration: 400ms;
+                transform: scale(1.1, 1.1) translate3d(0, 0, 0);
+                cursor: pointer;
+            }
+
+            .menu-open-button:hover {
+                transform: scale(1.2, 1.2) translate3d(0, 0, 0);
+            }
+
+            .menu-open:checked + .menu-open-button {
+                transition-timing-function: linear;
+                transition-duration: 200ms;
+                transform: scale(0.8, 0.8) translate3d(0, 0, 0);
+            }
+
+            .menu-open:checked ~ .menu-item {
+                transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            .menu-open:checked ~ .menu-item:nth-child(3) {
+                transition-duration: 190ms;
+                transform: translate3d(-60px, 0, 0);
+            }
+
+            .menu-open:checked ~ .menu-item:nth-child(4) {
+                transition-duration: 290ms;
+                transform: translate3d(-125px, 0, 0);
+            }
+
+            .menu-open:checked ~ .menu-item:nth-child(5) {
+                transition-duration: 390ms;
+                transform: translate3d(-190px, 0, 0);
+            }
+
+            .menu-open:checked ~ .menu-item:nth-child(6) {
+                transition-duration: 490ms;
+                transform: translate3d(-255px, 0, 0);
+            }
+
+            /*.modal-left {*/
+            /*    display: flex;*/
+            /*    justify-content: flex-start;*/
+            /*}*/
+
         </style>
 
 
         <script>
             $(document).ready(function () {
                 // $("#cards-box").html("");
-                showList();
+                showCard();
             });
 
-
             // db에 저장하는 create api
-            function postList() {
+            function createInput() {
                 // 1. 유저가 입력한 데이터를 #post-url에 가져오기
-                let url = $("#post-url").val();
+                let plant = $("#plantSelect").val();
+                let name = $("#plantName").val();
+                // let watering = $("#wateringdate").val();
 
                 // 2. memo에 POST 방식으로 메모 생성 요청하기
                 $.ajax({
                     type: "POST", // POST 방식으로 요청하겠다.
-                    url: "/data", // /data라는 url에 요청하겠다.
-                    data: {url_give: url}, // 데이터를 주는 방법
+                    url: "/create", // /create라는 url에 요청하겠다.
+                    data: {plant_give: plant, name_give: name}, // 데이터를 주는 방법
                     success: function (response) { // 성공하면
                         if (response["result"] == "success") {
                             alert(response["msg"]);
@@ -110,91 +314,197 @@
             }
 
             // db에서 데이터 갖고와서 카드 만들 기(read api)
-            function showList() {
+            function showCard() {
                 // $('#cards-box').empty()
                 $.ajax({
                     type: "GET",
-                    url: "/list",  // /list라는 url에 요청하겠다.
+                    url: "/read",  // /read라는 url에 요청하겠다.
                     data: {},
                     success: function (response) {
                         if (response["result"] == "empty") {
-                            $(".collapse").show();
-                            $("#collapse-icon").attr("class", "bi bi-dash");
-                            $("#icon-path").attr("d", "M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z");
-                            $(".navbar-toggler").prop('disabled', true);
-
-                            $("#post-url").focus();
+                            $(".forTooltip").tooltip('show');
 
                         } else if (response["result"] == "success") {
-                            let lists = response['lists'];
-                            for (let i = 0; i < lists.length; i++) {
-                                let img = lists[i]["image"];
-                                let url = lists[i]["url"];
-                                let title = lists[i]["title"];
-                                let category = lists[i]["category"];
-                                let direction = lists[i]["direction"];
-                                let id = lists[i]["_id"];
-                                let checked = lists[i]["checked"];
+                            let data = response['data'];
+                            for (let i = 0; i < data.length; i++) {
+                                let plant = data[i]["plant"];
+                                let name = data[i]["name"];
+                                let watering = data[i]["watering"];
+                                let fertilizing = data[i]["fertilizing"];
+                                let id = data[i]["_id"];
 
-                                let button_html = `
-                                    <div>
-                                        <button type="button" class="btn btn-secondary" onclick="update('${id}', 1)">&#x2715 아직</button>
-                                    </div>`
-
-                                if (checked == 1) {
-                                    button_html = `
-                                        <div>
-                                            <button type="button" class="btn checking" onclick="update('${id}', 0)">&#x2713 먹음</button>
-                                        </div>`;
+                                if (name === "") {
+                                    name = "애칭을 지어주세요"
                                 }
 
+                                let waterdate = "";
+                                let today = new Date();
+
+                                let timeValue = new Date(watering);
+                                let betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
+                                let betweenTimeHour = Math.floor(betweenTime / 60);
+                                let betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+
+                                if (watering === "") {
+                                    waterdate = "아직 물을 주지 않았어요"
+                                } else if (betweenTime < 1) {
+                                    waterdate = "방금 전 물줌"
+                                } else if (betweenTime < 60) {
+                                    waterdate = betweenTime + "분 전 물줌"
+                                } else if (betweenTimeHour < 24) {
+                                    waterdate = betweenTimeHour + "시간 전 물줌"
+                                } else if (betweenTimeDay < 365) {
+                                    waterdate = betweenTimeDay + "일 전 물줌"
+                                } else {
+                                    waterdate = Math.floor(betweenTimeDay / 365) + "년 전 물줌"
+                                }
+
+
+                                let button_html = `
+                                    <nav class="menu">
+                                        <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-${id}"/>
+                                            <label class="menu-open-button" for="menu-${id}">
+                                                <span class="hamburger hamburger-1"></span>
+                                                <span class="hamburger hamburger-2"></span>
+                                            </label>
+
+                                            <a href="#" class="menu-item" data-toggle="modal" data-target="#water${id}">
+                                                <svg width="1.5em" height="1.5em" viewBox="0 0 16 16"
+                                                                 class="bi bi-droplet-fill"
+                                                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd"
+                                                                      d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                                </svg>
+                                            </a>
+                                            <a href="#" class="menu-item"> 분무 </a>
+                                    </nav>
+
+
+                                                        <!--Modal: water proceed -->
+                                                        <div class="modal fade" id="water${id}" data-backdrop="false" tabindex="-1" aria-labelledby="waterLabel"
+                                                                    aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="waterLabel">화분 속 흙을 확인하세요🪴</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                                        aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        흙이 마르지 않았다면 나중에 물을 주세요.
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                                            미루기
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-success"  onclick="update('${id}', '${today}')">물주기</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                `
+
                                 let temp_html = `
-                                    <div class="card mb-2" id="${id}">
-                                        <div class="card-header row form-inline no-gutters">
-                                            <div class="col-1" id="deleteButton">
-                                                <a class="forTooltip" data-toggle="tooltip" data-placement="bottom" title="이 영양제 지우기">
-                                                    <svg onclick="deleteCard('${id}')" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x" id="del_${id}" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                        <path id="path" fill-rule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                                    </svg>
-                                                </a>
+                                    <div class="card" id="card${id}">
+                                        <a data-toggle="modal" data-target="#info${id}">
+                                            <img src="static/img/${plant}.JPG" class="card-img-top">
+                                        </a>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <div>
+                                                            <h5 class="card-title">${name}</h5>
+                                                            <p class="card-text">
+                                                                <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                                     class="bi bi-droplet-fill cardicon"
+                                                                     fill="currentColor"
+                                                                     xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd"
+                                                                          d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                                                </svg>
+                                                                ${waterdate}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        ` + button_html + `
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-8 pl-2">
-                                                <span class="align-middle">${category}</span>
-                                            </div>
-                                            ` + button_html + `
-                                        </div>
-                                        <div class="row form-inline no-gutters">
-                                            <div class="col-3">
-                                                <img src="${img}" class="card-img" alt="${title}">
-                                            </div>
-                                            <div class="col-9">
-                                                <div class="card-body">
-                                                    <h6 class="card-title">
-                                                        <a href="${url}" target="_blank">${title}</a>
-                                                    </h6>
-                                                    <p class="card-text">${direction}</p>
+                                    </div>
+
+                                    <!-- Modal: Info-->
+                                    <div class="modal fade" id="info${id}" data-backdrop="true"
+                                         data-keyboard="false" tabindex="-1" aria-labelledby="infoLabel"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <img src="static/img/${plant}.JPG" class="infoimg">
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <h5>${name}</h5>
+                                                    <h5>${plant}</h5>
+                                                    <p><object data="static/icons/watering01.svg" type="image/svg+xml" class="infoicon"></object> ${watering}</p>
+                                                </div>
+                                                <div class="modal-footer modal-left">
+                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete${id}">삭제하기</button>
+                                                    <button type="button" class="btn btn-success">수정하기</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>`;
+                                    </div>
+
+
+
+                                    <!--Modal: Delete?-->
+                                    <div class="modal fade" id="delete${id}" data-backdrop="true"
+                                         data-keyboard="false" tabindex="-1" aria-labelledby="deleteLabel"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <h5>정말 삭제하시겠어요?</h5>
+                                                </div>
+                                                <div class="modal-footer modal-left">
+                                                    <button type="button" class="btn btn-danger" onclick="deleteCard('${id}')">삭제</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
 
                                 $("#cards-box").append(temp_html);
-                                $(".forTooltip").tooltip({
-                                    delay: {"show": 500, "hide": 0}
-                                });
+                                $(".forTooltip").tooltip(
+                                    {
+                                        delay: {
+                                            "show":
+                                                500, "hide":
+                                                0
+                                        }
+                                    }
+                                );
                             }
                         }
                     }
                 })
             }
 
-            // 버튼 누르면 먹었는지 안먹었는지 정보 업데이트하기 (update api)
-            function update(id, checked) {
-                // 1. 서버에 1) POST 방식으로, 2) /update 라는 url에, 3) id_give 라는 이름으로 id를, check_give 라는 이름으로 checked 를 전달합니다.
+            // 버튼 누르면 정보 업데이트하기 (update api)
+            function update(id, today) {
+                // 1. 서버에 1) POST 방식으로, 2) /update 라는 url에, 3) id_give 라는 이름으로 id를, watering_give 라는 이름으로 watering 를 전달합니다.
                 $.ajax({
                     type: "POST",
                     url: "/update",
-                    data: {'id_give': id, 'check_give': checked},
+                    data: {'id_give': id, 'watering_give': today},
                     success: function (response) {
                         if (response['result'] == 'success') {
                             // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
@@ -214,7 +524,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/delete",
-                    data: {'id_give': id,},
+                    data: {'id_give': id},
                     success: function (response) {
                         if (response['result'] == 'success') {
                             // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
@@ -228,126 +538,29 @@
                 });
             }
 
-
-            $(function () {
-                $('#datetimepicker1').datetimepicker({format: 'L'});
-                $('#datetimepicker2').datetimepicker({format: 'L', useCurrent: false});
-                $("#datetimepicker1").on("change.datetimepicker", function (e) {
-                    $('#datetimepicker2').datetimepicker('minDate', e.date);
-                });
-                $("#datetimepicker2").on("change.datetimepicker", function (e) {
-                    $('#datetimepicker1').datetimepicker('maxDate', e.date);
-                });
-            });
-
-
         </script>
     </head>
 
     <body>
-        <div class="wrap">
-
+        <div class="container-fluid">
             <!--상단바-->
-            <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
-                <a class="navbar-brand" href="#">WIP Project Plant</a>
-                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
-                        data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse show" id="navbarsExampleDefault" style="">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">test<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">test</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </li>
-                    </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">찾기</button>
-                    </form>
-                </div>
-            </nav>
-
-
-            <!--텍스트 영역-->
-            <div class="starter-template">
-                <h1>WIP Project Plant</h1>
-                <p class="lead">테스트 테스트 테스트 테스트<br> 일단 복붙</p>
+            <div class="header">
+                <nav class="navbar navbar-dark" id="navbar">
+                    <span class="navbar-brand mb-0 title" style="color: #009933">WIP Project Plant</span>
+                </nav>
             </div>
 
+            <!--바디 영역-->
+            <div class="main">
+                <!--전체 카드 리스트-->
+                <div class="col-12 column">
+                    <div id="cards-box">
 
-            <!--카드 영역-->
-            <div class="main container-fluid">
-                <!--카드 덱-->
-                <div class="card-deck">
-                    <div class="card">
-                        <img src="areca_palm.JPG" class="card-img-top">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-8">
-                                    <div>
-                                        <h5 class="card-title">아레카 야자</h5>
-                                        <p class="card-text">
-                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-droplet-fill"
-                                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                      d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
-                                            </svg>
-                                            3일 전 물 줌
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <button type="button" class="btn btn-light btn-circle btn-circle-xl">
-                                        <img src="watering.svg" width="50px">
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
-
-                    <div class="card">
-                        <img src="areca_palm.JPG" class="card-img-top">
-                        <div class="row card-body">
-                            <div class="col-8">
-                                <div>
-                                    <h5 class="card-title">아레카 야자</h5>
-                                    <p class="card-text">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-droplet-fill"
-                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd"
-                                                  d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
-                                        </svg>
-                                        3일 전 물 줌
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <button type="button" class="btn btn-light btn-circle btn-circle-xl">
-                                    <img src="watering.svg" width="50px">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="card text-center">
-                        <div class="card-body addCard" data-toggle="modal" data-target="#staticBackdrop">
+                    <div class="card text-center addCard">
+                        <div class="card-body align-items-center d-flex justify-content-center" data-toggle="modal"
+                             data-target="#plantAdd">
                             <h1 class="card-title">
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus"
                                      fill="currentColor"
@@ -360,57 +573,41 @@
                     </div>
 
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false"
-                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog">
+                    <!-- Modal: plantAdd -->
+                    <div class="modal fade" id="plantAdd" data-backdrop="true" data-keyboard="false"
+                         tabindex="-1" aria-labelledby="plantAddLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">식물을 추가하세요.</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
+                                <!--                                <div class="modal-header">-->
+                                <!--                                    <h5 class="modal-title" id="plantAddLabel">식물을 추가하세요.</h5>-->
+                                <!--                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                                <!--                                        <span aria-hidden="true">&times;</span>-->
+                                <!--                                    </button>-->
+                                <!--                                </div>-->
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="plantSelect">식물을 선택하세요</label>
+                                        <label for="plantSelect">🌿식물을 선택하세요</label>
                                         <select class="form-control" id="plantSelect">
-                                            <option selected>Choose your plant.</option>
-                                            <option>식물 1</option>
-                                            <option>식물 2</option>
-                                            <option>식물 3</option>
-                                            <option>식물 4</option>
-                                            <option>식물 5</option>
+                                            <option selected>식물을 선택하세요</option>
+                                            <option value="dypsislutescens">식물01 (plant 01)</option>
+                                            <option value="dypsislutescens">식물02 (plant 02)</option>
                                         </select>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="plantName">식물 이름</label>
+                                        <label for="plantName">식물 애칭을 입력하세요</label>
                                         <input type="text" class="form-control" id="plantName"
                                                placeholder="식물 이름을 입력하세요">
                                     </div>
-
-                                    <div class="form-group">
-                                        <div class="input-group date" id="datetimepicker1"
-                                             data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input"
-                                                   data-target="#datetimepicker1" value="01/11/2020">
-                                            <div class="input-group-append" data-target="#datetimepicker1"
-                                                 data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                                    <button type="button" class="btn btn-success">등록</button>
+                                    <button type="button" class="btn btn-success" onclick="createInput()">등록</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                 </div>
             </div>

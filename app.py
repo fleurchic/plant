@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request
 from bson.objectid import ObjectId
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 client = MongoClient('mongodb://localhost', 27017)
 db = client.dbsparta
@@ -11,7 +11,7 @@ db = client.dbsparta
 # HTML 화면 보여주기
 @app.route('/')
 def home():
-    return render_template('index2.html')
+    return render_template('index.html')
 
 
 # API 역할을 하는 부분
@@ -21,9 +21,10 @@ def create_input():
     # 1. 클라이언트로부터 데이터를 받기
     plant_receive = request.form['plant_give']
     name_receive = request.form['name_give']
-    watering_receive = request.form['watering_give']
+    watering_init = ""
+    fertilizing_init = ""
 
-    list = {'plant': plant_receive, 'name': name_receive, 'watering': watering_receive}
+    list = {'plant': plant_receive, 'name': name_receive, 'watering': watering_init, 'fertilizing': fertilizing_init}
 
     # 2. mongoDB에 데이터를 넣기
     db.plants.insert_one(list)
@@ -71,6 +72,7 @@ def update_water():
     # 4. 성공하면 success 메시지를 반환합니다.
     return jsonify({'result': 'success', 'card_id': id_receive})
 
+
 # 카드를 삭제하는 DELETE API
 @app.route('/delete', methods=['POST'])
 def delete_card():
@@ -78,10 +80,24 @@ def delete_card():
     id_receive = request.form['id_give']
 
     # 2. mystar 목록에서 delete_one으로 name이 name_receive와 일치하는 star를 제거합니다.
-    db.supplements.delete_one({'_id': ObjectId(id_receive)})
+    db.plants.delete_one({'_id': ObjectId(id_receive)})
 
     # 3. 성공하면 success 메시지를 반환합니다.
     return jsonify({'result': 'success'})
+
+
+# 데이터 입력 내용을 수정하는 POST API
+@app.route('/edit', methods=["POST"])
+def edit_data():
+    id_receive = request.form['id_give']
+    water_receive = request.form['water_give']
+    fertile_receive = request.form['fertile_give']
+
+    # id 기준으로 데이터를 찾아 내용을 업데이트합니다.
+    db.plants.update_one({'id': ObjectId(id_receive)}, {
+        '$set': {'watering': water_receive, 'fertilizing': fertile_receive}})
+
+    return jsonify({'result': 'success', 'msg': '메시지 변경에 성공하였습니다!'})
 
 
 if __name__ == '__main__':
