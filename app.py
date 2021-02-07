@@ -91,14 +91,13 @@ def delete_card():
 def edit_data():
     id_receive = request.form['id_give']
     name_receive = request.form['name_give']
-    water_receive = request.form['water_give']
-    fertile_receive = request.form['fertile_give']
+    # water_receive = request.form['water_give']
+    # fertile_receive = request.form['fertile_give']
 
     # id 기준으로 데이터를 찾아 내용을 업데이트합니다.
-    db.plants.update_one({'id': ObjectId(id_receive)}, {
-        '$set': {'name': name_receive, 'watering': water_receive, 'fertilizing': fertile_receive}})
+    db.plants.update_one({'_id': ObjectId(id_receive)}, {'$set': {'name': name_receive}})
 
-    return jsonify({'result': 'success', 'msg': '메시지 변경에 성공하였습니다!'})
+    return jsonify({'result': 'success'})
 
 
 if __name__ == '__main__':

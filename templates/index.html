@@ -296,7 +296,6 @@
 
         <script>
             $(document).ready(function () {
-                // $("#cards-box").html("");
                 showCard();
             });
 
@@ -323,9 +322,108 @@
                 })
             }
 
+            // 버튼 누르면 정보 업데이트하기 (update api)
+            function update(id, today) {
+                // 1. 서버에 1) POST 방식으로, 2) /update 라는 url에, 3) id_give 라는 이름으로 id를, watering_give 라는 이름으로 watering 를 전달합니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/update",
+                    data: {'id_give': id, 'watering_give': today},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
+                            window.location.reload();
+                        }
+                        // let cardId = response['card_id'];
+                        // console.log(`reloaded: ${cardId}`);
+                        // $('#'+cardId).load(location.href + ' #'+cardId);
+                    }
+                })
+                ;
+            }
+
+            // 삭제버 누르면 카드 삭제하기 (delete api)
+            function deleteCard(id) {
+                // 1. 서버에 1) POST 방식으로, 2) /delete 라는 url에, 3) id_give 라는 이름으로 id를 전달합니다.
+                $.ajax({
+                    type: "POST",
+                    url: "/delete",
+                    data: {'id_give': id},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
+                            console.log("deleting " + id);
+                            window.location.reload();
+                        } else {
+                            alert('서버 오류')
+                        }
+                    }
+                });
+            }
+
+            // 수정 버튼을 누르면 editData 함수가 호출된다.
+            function editData(id) {
+                // id 일치하는 카드에 수정 입력칸을 보여준다.
+                showEdits(id);
+                // 기존 내용을 가져온다.
+                let name = $(`#${id}-name`).text();
+                // 수정 입력 칸에 기존 메모 내용을 넣어둔다.
+                $(`#${id}-namearea`).attr('placeholder', name)
+            }
+
+            function showEdits(id) {
+                // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 보여준다.
+                $(`#${id}-namearea`).show();
+                $(`#${id}-submit`).show();
+                $(`#${id}-cancel`).show();
+
+                // 메모 내용, 수정 버튼을 숨긴다.
+                $(`#${id}-name`).hide();
+                $(`#${id}-edit`).hide();
+                $(`#${id}-close`).hide();
+            }
+
+            // 취소 버튼을 누르면 hideEdits 함수가 호출된다.
+            function hideEdits(id) {
+                // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 숨긴다.
+                $(`#${id}-namearea`).hide();
+                $(`#${id}-submit`).hide();
+                $(`#${id}-cancel`).hide();
+
+                // 메모 내용, 수정 버튼을 보여준다.
+                $(`#${id}-name`).show();
+                $(`#${id}-edit`).show();
+                $(`#${id}-close`).show();
+            }
+
+            // 수정완료 버튼을 누르면 submitEdit 함수가 호출, db에 새로운 값 업데이
+            function submitEdit(id) {
+                // 수정된 내용을 가져오기
+                let newname = $(`#${id}-namearea`).val();
+                if (newname === "") {
+                    newname = $(`#${id}-name`).text();
+                }
+
+                // 정보 수정을 서버에 요청한다.
+                $.ajax({
+                    type: "POST",
+                    url: "/edit",
+                    data: {id_give: id, name_give: newname},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            // 변경된 메모를 보기 위해 창을 새로고침한다.
+                            showCard();
+                            window.location.reload();
+                        } else {
+                            alert('error');
+                        }
+                    }
+                });
+            }
+
+
             // db에서 데이터 갖고와서 카드 만들 기(read api)
             function showCard() {
-                // $('#cards-box').empty()
                 $.ajax({
                     type: "GET",
                     url: "/read",  // /read라는 url에 요청하겠다.
@@ -360,7 +458,7 @@
                                 } else if (betweenTime < 1) {
                                     waterdate = "방금 전 물줌"
                                 } else if (betweenTime < 60) {
-                                    waterdate = "방금 전 물줌"
+                                    waterdate = betweenTime + "분 전 물줌"
                                 } else if (betweenTimeHour < 24) {
                                     waterdate = "오늘 물줌"
                                 } else if (betweenTimeDay < 365) {
@@ -368,7 +466,6 @@
                                 } else {
                                     waterdate = Math.floor(betweenTimeDay / 365) + "년 전 물줌"
                                 }
-
 
                                 let button_html = `
                                     <nav class="menu">
@@ -391,205 +488,113 @@
                                             </a>
                                     </nav>
 
+                                    <div class="modal fade" id="water${id}" data-backdrop="true" tabindex="-1" aria-labelledby="waterLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="waterLabel">화분 속 흙을 확인하세요🪴</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">흙이 마르지 않았다면 나중에 물을 주세요.</div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-success"  onclick="update('${id}', '${today}')">물주기</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">미루기</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    `
 
-                                                        <!--Modal: water proceed -->
-                                                        <div class="modal fade" id="water${id}" data-backdrop="false" tabindex="-1" aria-labelledby="waterLabel"
-                                                                    aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title" id="waterLabel">화분 속 흙을 확인하세요🪴</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal"
-                                                                                        aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        흙이 마르지 않았다면 나중에 물을 주세요.
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                                            미루기
-                                                                        </button>
-                                                                        <button type="button" class="btn btn-success"  onclick="update('${id}', '${today}')">물주기</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                `
 
                                 let temp_html = `
                                     <div class="card" id="card${id}">
                                         <a data-toggle="modal" data-target="#info${id}">
                                             <img src="static/img/${plant}.JPG" class="card-img-top">
                                         </a>
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-9">
-                                                        <div>
-                                                            <h5 class="card-title">${name}</h5>
-                                                            <p class="card-text">
-                                                                <svg width="1em" height="1em" viewBox="0 0 16 16"
-                                                                     class="bi bi-droplet-fill cardicon"
-                                                                     fill="currentColor"
-                                                                     xmlns="http://www.w3.org/2000/svg">
-                                                                    <path fill-rule="evenodd"
-                                                                          d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
-                                                                </svg>
-                                                                ${waterdate}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        ` + button_html + `
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <div>
+                                                        <h5 class="card-title">${name}</h5>
+                                                        <p class="card-text">
+                                                            <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                                class="bi bi-droplet-fill cardicon"
+                                                                fill="currentColor"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                                            </svg>
+                                                            ${waterdate}
+                                                        </p>
                                                     </div>
                                                 </div>
+                                                <div class="col-3">
+                                                    ` + button_html + `
+                                                </div>
                                             </div>
+                                        </div>
                                     </div>
 
-                                    <!-- Modal: Info-->
-                                    <div class="modal fade" id="info${id}" data-backdrop="true"
-                                         data-keyboard="false" tabindex="-1" aria-labelledby="infoLabel"
-                                         aria-hidden="true">
+                                    <!-- Modal Info-->
+                                    <div class="modal fade" id="info${id}" data-backdrop="static"
+                                        data-keyboard="false" tabindex="-1" aria-labelledby="infoLabel"
+                                        aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <img src="static/img/${plant}.JPG" class="infoimg">
                                                     <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
+                                                        aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <textarea id="${id}-textarea" class="area-edit" cols="80"></textarea>
+                                                    <input class="form-control area-edit" id="${id}-namearea" type="text">
                                                     <h5 id="${id}-name">${name}</h5>
                                                     <h5>${plant}</h5>
                                                     <p><object data="static/icons/watering01.svg" type="image/svg+xml" class="infoicon"></object> ${watering}</p>
                                                 </div>
                                                 <div class="modal-footer modal-left">
                                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete${id}">삭제하기</button>
-                                                    <button type="button" class="btn btn-success" id="${id}-edit">수정하기</button>
-                                                    <button type="button" class="btn btn-success area-edit" id="${id}-submit">수정완료</button>
-                                                    <button type="button" class="btn btn-success area-edit" id="${id}-cancel">수정취소</button>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                                                    <button type="button" class="btn btn-success" id="${id}-edit" onclick="editData('${id}')">수정하기</button>
+                                                    <button type="button" class="btn btn-success area-edit" id="${id}-submit" onclick="submitEdit('${id}')">수정완료</button>
+                                                    <button type="button" class="btn btn-secondary area-edit" id="${id}-cancel" onclick="hideEdits('${id}')">수정취소</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="${id}-close">닫기</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!--Modal Delete?-->
+                                <div class="modal fade" id="delete${id}" data-backdrop="true"
+                                data-keyboard="false" tabindex="-1" aria-labelledby="deleteLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-sm">
+                                <div class="modal-content">
+                                <div class="modal-body">
+                                <h5>정말 삭제하시겠어요?</h5>
+                                </div>
+                                <div class="modal-footer modal-left">
+                                <button type="button" class="btn btn-danger" onclick="deleteCard('${id}')">삭제</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                                `
+                                ;
 
-
-                                    <!--Modal: Delete?-->
-                                    <div class="modal fade" id="delete${id}" data-backdrop="true"
-                                         data-keyboard="false" tabindex="-1" aria-labelledby="deleteLabel"
-                                         aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-sm">
-                                            <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <h5>정말 삭제하시겠어요?</h5>
-                                                </div>
-                                                <div class="modal-footer modal-left">
-                                                    <button type="button" class="btn btn-danger" onclick="deleteCard('${id}')">삭제</button>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-
+                                $("#addsubtitle").hide();
                                 $("#cards-box").append(temp_html);
-                                $(".forTooltip").tooltip(
-                                    {
-                                        delay: {
-                                            "show":
-                                                500, "hide":
-                                                0
-                                        }
-                                    }
-                                );
                             }
                         }
                     }
                 })
             }
-
-                // 버튼 누르면 정보 업데이트하기 (update api)
-                function update(id, today) {
-                    // 1. 서버에 1) POST 방식으로, 2) /update 라는 url에, 3) id_give 라는 이름으로 id를, watering_give 라는 이름으로 watering 를 전달합니다.
-                    $.ajax({
-                        type: "POST",
-                        url: "/update",
-                        data: {'id_give': id, 'watering_give': today},
-                        success: function (response) {
-                            if (response['result'] == 'success') {
-                                // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
-                                window.location.reload();
-                            }
-                            // let cardId = response['card_id'];
-                            // console.log(`reloaded: ${cardId}`);
-                            // $('#'+cardId).load(location.href + ' #'+cardId);
-                        }
-                    })
-                    ;
-                }
-
-                // x 누르면 카드 삭제하기 (delete api)
-                function deleteCard(id) {
-                    // 1. 서버에 1) POST 방식으로, 2) /delete 라는 url에, 3) id_give 라는 이름으로 id를 전달합니다.
-                    $.ajax({
-                        type: "POST",
-                        url: "/delete",
-                        data: {'id_give': id},
-                        success: function (response) {
-                            if (response['result'] == 'success') {
-                                // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
-                                console.log("deleting " + id);
-                                window.location.reload();
-                            } else {
-                                alert('서버 오류')
-                            }
-                        }
-                    });
-                }
-
-                // 수정 버튼을 누르면 edit 함수가 호출된다.
-                // 어떤 식물인지 알기 위해 id 전달 받는다.
-                function edit(id) {
-                    // id 일치하는 카드에 수정 입력칸을 보여준다.
-                    showEdits(id);
-                    // 기존 내용을 가져온다.
-                    let name = $(`#${id}-name`).text();
-                    // 수정 입력 칸에 기존 메모 내용을 넣어둔다.
-                    $(`#${id}-textarea`).val(name);
-                }
-
-                function showEdits(id) {
-                    // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 보여준다.
-                    $(`#${id}-textarea`).show();
-                    $(`#${id}-submit`).show();
-                    $(`#${id}-cancel`).show();
-
-                    // 메모 내용, 수정 버튼을 숨긴다.
-                    $(`#${id}-name`).hide();
-                    $(`#${id}-edit`).hide();
-                }
-
-                // 취소 버튼을 누르면 hideEdits 함수가 호출된다.
-                // 어떤 메모인지 알기 위해 id 전달 받는다.
-                function hideEdits(id) {
-                    // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 숨긴다.
-                    $(`#${id}-textarea`).hide();
-                    $(`#${id}-submit`).hide();
-                    $(`#${id}-cancel`).hide();
-
-                    // 메모 내용, 수정 버튼을 보여준다.
-                    $(`#${id}-name`).show();
-                    $(`#${id}-edit`).show();
-                }
-
-
-
-
         </script>
     </head>
 
