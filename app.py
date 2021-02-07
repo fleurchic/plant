@@ -28,7 +28,7 @@ def create_input():
 
     # 2. mongoDB에 데이터를 넣기
     db.plants.insert_one(list)
-    return jsonify({'result': 'success', 'msg': '등록했습니다!'})
+    return jsonify({'result': 'success'})
 
 
 # 화면 로딩할 때마다 db에 저장한 정보를 읽어오는 READ API
@@ -90,12 +90,13 @@ def delete_card():
 @app.route('/edit', methods=["POST"])
 def edit_data():
     id_receive = request.form['id_give']
+    name_receive = request.form['name_give']
     water_receive = request.form['water_give']
     fertile_receive = request.form['fertile_give']
 
     # id 기준으로 데이터를 찾아 내용을 업데이트합니다.
     db.plants.update_one({'id': ObjectId(id_receive)}, {
-        '$set': {'watering': water_receive, 'fertilizing': fertile_receive}})
+        '$set': {'name': name_receive, 'watering': water_receive, 'fertilizing': fertile_receive}})
 
     return jsonify({'result': 'success', 'msg': '메시지 변경에 성공하였습니다!'})
 

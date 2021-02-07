@@ -33,7 +33,8 @@
                 src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
         <script type="text/javascript"
                 src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <script type="text/javascript"
+                src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
 
         <!-- 폰트-->
@@ -76,6 +77,13 @@
             .infoicon {
                 width: 1.3em;
                 vertical-align: text-bottom;
+            }
+
+            .updateicon {
+                width: 1.8em;
+                vertical-align: middle;
+                stroke: white;
+                color-fill: white;
             }
 
             .cardicon {
@@ -280,6 +288,9 @@
             /*    justify-content: flex-start;*/
             /*}*/
 
+            .area-edit {
+                display: none;
+            }
         </style>
 
 
@@ -303,7 +314,6 @@
                     data: {plant_give: plant, name_give: name}, // 데이터를 주는 방법
                     success: function (response) { // 성공하면
                         if (response["result"] == "success") {
-                            alert(response["msg"]);
                             // 3. 성공 시 페이지 새로고침하기
                             window.location.reload();
                         } else {
@@ -350,9 +360,9 @@
                                 } else if (betweenTime < 1) {
                                     waterdate = "방금 전 물줌"
                                 } else if (betweenTime < 60) {
-                                    waterdate = betweenTime + "분 전 물줌"
+                                    waterdate = "방금 전 물줌"
                                 } else if (betweenTimeHour < 24) {
-                                    waterdate = betweenTimeHour + "시간 전 물줌"
+                                    waterdate = "오늘 물줌"
                                 } else if (betweenTimeDay < 365) {
                                     waterdate = betweenTimeDay + "일 전 물줌"
                                 } else {
@@ -376,7 +386,9 @@
                                                                       d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
                                                 </svg>
                                             </a>
-                                            <a href="#" class="menu-item"> 분무 </a>
+                                            <a href="#" class="menu-item">
+                                                <object data="static/icons/fertilizer.svg" type="image/svg+xml" class="updateicon"></object>
+                                            </a>
                                     </nav>
 
 
@@ -449,13 +461,16 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <h5>${name}</h5>
+                                                    <textarea id="${id}-textarea" class="area-edit" cols="80"></textarea>
+                                                    <h5 id="${id}-name">${name}</h5>
                                                     <h5>${plant}</h5>
                                                     <p><object data="static/icons/watering01.svg" type="image/svg+xml" class="infoicon"></object> ${watering}</p>
                                                 </div>
                                                 <div class="modal-footer modal-left">
                                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete${id}">삭제하기</button>
-                                                    <button type="button" class="btn btn-success">수정하기</button>
+                                                    <button type="button" class="btn btn-success" id="${id}-edit">수정하기</button>
+                                                    <button type="button" class="btn btn-success area-edit" id="${id}-submit">수정완료</button>
+                                                    <button type="button" class="btn btn-success area-edit" id="${id}-cancel">수정취소</button>
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
                                                 </div>
                                             </div>
@@ -498,45 +513,82 @@
                 })
             }
 
-            // 버튼 누르면 정보 업데이트하기 (update api)
-            function update(id, today) {
-                // 1. 서버에 1) POST 방식으로, 2) /update 라는 url에, 3) id_give 라는 이름으로 id를, watering_give 라는 이름으로 watering 를 전달합니다.
-                $.ajax({
-                    type: "POST",
-                    url: "/update",
-                    data: {'id_give': id, 'watering_give': today},
-                    success: function (response) {
-                        if (response['result'] == 'success') {
-                            // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
-                            window.location.reload();
+                // 버튼 누르면 정보 업데이트하기 (update api)
+                function update(id, today) {
+                    // 1. 서버에 1) POST 방식으로, 2) /update 라는 url에, 3) id_give 라는 이름으로 id를, watering_give 라는 이름으로 watering 를 전달합니다.
+                    $.ajax({
+                        type: "POST",
+                        url: "/update",
+                        data: {'id_give': id, 'watering_give': today},
+                        success: function (response) {
+                            if (response['result'] == 'success') {
+                                // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
+                                window.location.reload();
+                            }
+                            // let cardId = response['card_id'];
+                            // console.log(`reloaded: ${cardId}`);
+                            // $('#'+cardId).load(location.href + ' #'+cardId);
                         }
-                        // let cardId = response['card_id'];
-                        // console.log(`reloaded: ${cardId}`);
-                        // $('#'+cardId).load(location.href + ' #'+cardId);
-                    }
-                })
-                ;
-            }
+                    })
+                    ;
+                }
 
-            // x 누르면 카드 삭제하기 (delete api)
-            function deleteCard(id) {
-                // 1. 서버에 1) POST 방식으로, 2) /delete 라는 url에, 3) id_give 라는 이름으로 id를 전달합니다.
-                $.ajax({
-                    type: "POST",
-                    url: "/delete",
-                    data: {'id_give': id},
-                    success: function (response) {
-                        if (response['result'] == 'success') {
-                            // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
-                            console.log("deleting " + id);
-                            alert('삭제했습니다.');
-                            window.location.reload();
-                        } else {
-                            alert('서버 오류')
+                // x 누르면 카드 삭제하기 (delete api)
+                function deleteCard(id) {
+                    // 1. 서버에 1) POST 방식으로, 2) /delete 라는 url에, 3) id_give 라는 이름으로 id를 전달합니다.
+                    $.ajax({
+                        type: "POST",
+                        url: "/delete",
+                        data: {'id_give': id},
+                        success: function (response) {
+                            if (response['result'] == 'success') {
+                                // 2. 변경된 정보를 반영하기 위해 새로고침합니다.
+                                console.log("deleting " + id);
+                                window.location.reload();
+                            } else {
+                                alert('서버 오류')
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
+
+                // 수정 버튼을 누르면 edit 함수가 호출된다.
+                // 어떤 식물인지 알기 위해 id 전달 받는다.
+                function edit(id) {
+                    // id 일치하는 카드에 수정 입력칸을 보여준다.
+                    showEdits(id);
+                    // 기존 내용을 가져온다.
+                    let name = $(`#${id}-name`).text();
+                    // 수정 입력 칸에 기존 메모 내용을 넣어둔다.
+                    $(`#${id}-textarea`).val(name);
+                }
+
+                function showEdits(id) {
+                    // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 보여준다.
+                    $(`#${id}-textarea`).show();
+                    $(`#${id}-submit`).show();
+                    $(`#${id}-cancel`).show();
+
+                    // 메모 내용, 수정 버튼을 숨긴다.
+                    $(`#${id}-name`).hide();
+                    $(`#${id}-edit`).hide();
+                }
+
+                // 취소 버튼을 누르면 hideEdits 함수가 호출된다.
+                // 어떤 메모인지 알기 위해 id 전달 받는다.
+                function hideEdits(id) {
+                    // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 숨긴다.
+                    $(`#${id}-textarea`).hide();
+                    $(`#${id}-submit`).hide();
+                    $(`#${id}-cancel`).hide();
+
+                    // 메모 내용, 수정 버튼을 보여준다.
+                    $(`#${id}-name`).show();
+                    $(`#${id}-edit`).show();
+                }
+
+
+
 
         </script>
     </head>
@@ -554,10 +606,7 @@
             <div class="main">
                 <!--전체 카드 리스트-->
                 <div class="col-12 column">
-                    <div id="cards-box">
-
-
-                    </div>
+                    <div id="cards-box"></div>
                     <div class="card text-center addCard">
                         <div class="card-body align-items-center d-flex justify-content-center" data-toggle="modal"
                              data-target="#plantAdd">
@@ -571,6 +620,7 @@
                             </h1>
                         </div>
                     </div>
+                    <h3 id="addsubtitle">🪴 식물을 추가하세요</h3>
 
 
                     <!-- Modal: plantAdd -->
