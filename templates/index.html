@@ -15,9 +15,10 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
               integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
               crossorigin="anonymous">
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css"/>
         <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css"
+              integrity="sha512-urpIFwfLI9ZDL81s6eJjgBF7LpG+ROXjp1oNwTj4gSlCw00KiV1rWBrfszV3uf5r+v621fsAwqvy1wRJeeWT/A=="
+              crossorigin="anonymous"/>
 
 
         <!-- Optional JavaScript -->
@@ -26,15 +27,21 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
                 integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
                 crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"
+                integrity="sha512-JGKswjfABjJjtSUnz+y8XUBjBlwM1UHNlm2ZJN7A2a9HUYT3Mskq+SacsI35k4lok+/zetSxhZjKS3r3tfAnQg=="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.9.2/i18n/jquery.ui.datepicker-ko.min.js"
+                integrity="sha512-H7eePNKUoYgGkrG9JF6OKcwfGMXnH8/kBjcUHjo3f4HTR4LVPYzBwxunIuzM8C6lqTsaqJW6OtAM7UKEPSeKJg=="
+                crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
                 integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
                 crossorigin="anonymous"></script>
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
-        <script type="text/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+                integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ko.min.js"
+                integrity="sha512-3kMAxw/DoCOkS6yQGfQsRY1FWknTEzdiz8DOwWoqf+eGRN45AmjS2Lggql50nCe9Q6m5su5dDZylflBY2YjABQ=="
+                crossorigin="anonymous"></script>
 
 
         <!-- 폰트-->
@@ -374,6 +381,8 @@
             function showEdits(id) {
                 // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 보여준다.
                 $(`#${id}-namearea`).show();
+                $(`#${id}-waterdate`).show();
+                $(`#${id}-waterdatebutton`).show();
                 $(`#${id}-submit`).show();
                 $(`#${id}-cancel`).show();
 
@@ -387,6 +396,8 @@
             function hideEdits(id) {
                 // 수정 입력 칸, 수정완료 버튼, 취소 버튼을 숨긴다.
                 $(`#${id}-namearea`).hide();
+                $(`#${id}-waterdate`).show();
+                $(`#${id}-waterdatebutton`).show();
                 $(`#${id}-submit`).hide();
                 $(`#${id}-cancel`).hide();
 
@@ -484,7 +495,10 @@
                                                 </svg>
                                             </a>
                                             <a href="#" class="menu-item">
-                                                <object data="static/icons/fertilizer.svg" type="image/svg+xml" class="updateicon"></object>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="currentColor"
+                                                                class="bi bi-eyedropper" viewBox="0 0 16 16">
+                                                                <path d="M13.354.646a1.207 1.207 0 0 0-1.708 0L8.5 3.793l-.646-.647a.5.5 0 1 0-.708.708L8.293 5l-7.147 7.146A.5.5 0 0 0 1 12.5v1.793l-.854.854a.5.5 0 1 0 .708.707L1.707 15H3.5a.5.5 0 0 0 .354-.146L11 7.707l1.146 1.147a.5.5 0 0 0 .708-.708l-.647-.646 3.147-3.146a1.207 1.207 0 0 0 0-1.708l-2-2zM2 12.707l7-7L10.293 7l-7 7H2v-1.293z"/>
+                                                </svg>
                                             </a>
                                     </nav>
 
@@ -556,7 +570,39 @@
                                                     <input class="form-control area-edit" id="${id}-namearea" type="text">
                                                     <h5 id="${id}-name">${name}</h5>
                                                     <h5>${plant}</h5>
-                                                    <p><object data="static/icons/watering01.svg" type="image/svg+xml" class="infoicon"></object> ${watering}</p>
+                                                    <div class="form-row">
+                                                        <div class="col-auto" style="padding-right: 0px">
+                                                        <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                                class="bi bi-droplet-fill cardicon"
+                                                                fill="currentColor"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                                        </svg>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input type="text" class="form-control" id="${id}-waterdate">
+                                                        </div>
+                                                        <button type="button" class="btn btn-secondary">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                                                class="bi bi-calendar3 cardicon" id="${id}-waterdatebutton" viewBox="0 0 16 16">
+                                                                <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+                                                                <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+
+                                                    <p id="wateringkr">
+                                                        <svg width="1em" height="1em" viewBox="0 0 16 16"
+                                                                class="bi bi-droplet-fill cardicon"
+                                                                fill="currentColor"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M8 16a6 6 0 0 0 6-6c0-1.655-1.122-2.904-2.432-4.362C10.254 4.176 8.75 2.503 8 0c0 0-6 5.686-6 10a6 6 0 0 0 6 6zM6.646 4.646c-.376.377-1.272 1.489-2.093 3.13l.894.448c.78-1.559 1.616-2.58 1.907-2.87l-.708-.708z"/>
+                                                        </svg>
+                                                        물준 날: ${(moment(timeValue).format('YYYY[년] M[월] D[일] dddd'))}
+                                                    </p>
+
                                                 </div>
                                                 <div class="modal-footer modal-left">
                                                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete${id}">삭제하기</button>
@@ -588,6 +634,7 @@
                                 `
                                 ;
 
+                                $("#wateringkr").html(moment(timeValue).format('LL'));
                                 $("#addsubtitle").hide();
                                 $("#cards-box").append(temp_html);
                             }
@@ -656,14 +703,12 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
                                     <button type="button" class="btn btn-success" onclick="createInput()">등록</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
