@@ -72,6 +72,24 @@ def update_water():
     # 4. 성공하면 success 메시지를 반환합니다.
     return jsonify({'result': 'success', 'card_id': id_receive})
 
+# 물 줬는지 여부를 db에 업데이트하는 UPDATE API
+@app.route('/update2', methods=['POST'])
+def update_fertile():
+    # 1. 클라이언트가 전달한 id_give를 id_receive 변수에 넣습니다.
+    fertile_receive = request.form['fertile_give']
+    id_receive = request.form['id_give']
+
+    # # 2. check_receive 값을 string 이 아니라 integer 로 만들기
+    # # 왜인지 모르겠지만 이거 안해도 작동은 하는데 찜찜해서. 대신 이거 안했더니 다른 함수에서 checked 값 호출할때 '' 붙여줘야 인식함)
+    # check_receive2 = int(check_receive)
+
+    # 3. supplements 목록에서 _id 값이 id_received 인 문서의 watering 을 watering_receive 로 변경합니다.
+    # 참고: '$set' 활용하기!
+    db.plants.update_one({'_id': ObjectId(id_receive)}, {'$set': {'fertilizing': fertile_receive}})
+
+    # 4. 성공하면 success 메시지를 반환합니다.
+    return jsonify({'result': 'success', 'card_id': id_receive})
+
 
 # 카드를 삭제하는 DELETE API
 @app.route('/delete', methods=['POST'])
@@ -91,11 +109,11 @@ def delete_card():
 def edit_data():
     id_receive = request.form['id_give']
     name_receive = request.form['name_give']
-    # water_receive = request.form['water_give']
-    # fertile_receive = request.form['fertile_give']
+    water_receive = request.form['water_give']
+    fertile_receive = request.form['fertile_give']
 
     # id 기준으로 데이터를 찾아 내용을 업데이트합니다.
-    db.plants.update_one({'_id': ObjectId(id_receive)}, {'$set': {'name': name_receive}})
+    db.plants.update_one({'_id': ObjectId(id_receive)}, {'$set': {'name': name_receive, 'watering': water_receive, 'fertilizing': fertile_receive}})
 
     return jsonify({'result': 'success'})
 
